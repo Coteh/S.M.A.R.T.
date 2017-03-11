@@ -5,12 +5,22 @@
  */
 package smart;
 
+import java.util.ArrayList;
+
 /**
  *
  * @author James
  */
 public class MarkDataInput {
-    MarkData getData(String file) {
-        throw new UnsupportedOperationException();
+    public static ArrayList getStudents(String file) {
+        ArrayList students = new ArrayList<Student>();
+        //...
+        return students;
+    }
+    
+    public static ArrayList getCourses(String file) {
+        ArrayList courses = new ArrayList<Course>();
+        //...
+        return courses;
     }
 }
