@@ -12,8 +12,12 @@ import java.util.ArrayList;
  * @author James
  */
 public class MarkData {
-    public SNHList analysis(String file){
-        return null;
+    public ArrayList analysis(String file){
+        ArrayList orderedStudents = new ArrayList<StudentInNeed>();
+        ArrayList courses;
+        ArrayList students;
+        
+        return orderedStudents;
     }
     
 }

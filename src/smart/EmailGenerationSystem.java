@@ -10,7 +10,7 @@ package smart;
  * @author James
  */
 public class EmailGenerationSystem {
-    private SNHList snhList;
+    private StudentInNeed snhList;
     private String helperEmail;
 
     public static void main(String[] args) {
