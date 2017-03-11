@@ -13,12 +13,13 @@ package smart;
 public class StudentInNeed {
     private final String name;
     private final String id;
+    private final String email;
     private final double priority;
     private final double pa; // a type priority
     private final double pb;
     private final double pc;
     
-    public StudentInNeed(String name, String id, double pa, double pb, double pc) throws Exception{
+    public StudentInNeed(String name, String id, String email, double pa, double pb, double pc) throws Exception{
         if (name.isEmpty() || id.isEmpty())
             throw new Exception("SIN: empty value(s)");
         if (id.length() != 7)
@@ -26,6 +27,7 @@ public class StudentInNeed {
         
         this.name = name;
         this.id = id;
+        this.email = email;
         this.pa = pa;
         this.pb = pb;
         this.pc = pc;
