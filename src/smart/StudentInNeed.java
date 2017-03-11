@@ -42,6 +42,10 @@ public class StudentInNeed {
         return id;
     }
     
+    public String getEmail() {
+        return email;
+    }
+    
     public double getPriority() {
         return priority;
     }
