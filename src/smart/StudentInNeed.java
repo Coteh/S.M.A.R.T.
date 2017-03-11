@@ -20,7 +20,7 @@ public class StudentInNeed {
     private final double pc;
     
     public StudentInNeed(String name, String id, String email, double pa, double pb, double pc) throws Exception{
-        if (name.isEmpty() || id.isEmpty())
+        if (name.isEmpty() || id.isEmpty() || email.isEmpty())
             throw new Exception("SIN: empty value(s)");
         if (id.length() != 7)
             throw new Exception("SIN: wrong number of digits");
