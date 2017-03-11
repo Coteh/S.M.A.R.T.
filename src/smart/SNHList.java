@@ -5,17 +5,12 @@
  */
 package smart;
 
+import java.util.ArrayList;
+
 /**
- *
+ * Students in Need of Help List
  * @author James
  */
-public class SMART {
-
-    /**
-     * @param args the command line arguments
-     */
-    public static void main(String[] args) {
-        // TODO code application logic here
-    }
+public class SNHList extends ArrayList {
     
 }
