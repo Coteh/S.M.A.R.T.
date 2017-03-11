@@ -12,7 +12,7 @@ import java.util.ArrayList;
  * @author James
  */
 public class MarkData {
-    public ArrayList analysis(String file){
+    public static ArrayList analysis(String file){
         ArrayList orderedStudents = new ArrayList<StudentInNeed>();
         ArrayList courses;
         ArrayList students;
