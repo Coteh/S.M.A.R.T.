@@ -12,6 +12,10 @@ import java.util.ArrayList;
  * @author James
  */
 public class MarkData {
+    private static final double aFactor = 1;
+    private static final double bFactor = 1;
+    private static final double cFactor = 1;
+    
     public static void main(String[] args) {
         double[][] test = new double[5][2];
         System.out.println(test.length); // == 5
@@ -27,16 +31,16 @@ public class MarkData {
         ArrayList<StudentInNeed> orderedStudents = new ArrayList();
         ArrayList<Course> courses = MarkDataInput.getCourses(file);
         ArrayList<Student> students = MarkDataInput.getStudents(file);
-        int pa=0, pb=0, pc=0;
+        double pa=0.0, pb=0.0, pc=0.0;
         for (int i=0; i<students.size(); i++) {
             //pa = ...
             
             for (int j=0; j<students.get(i).getCoursesList().size(); j++) {
                 String courseName = students.get(i).getCourseAt(j).getName();
                 int coursePosition = 0; // default 0 is problematic with imposing a found course
-                for (int m=0; i<courses.size(); m++) {
-                    if (courses.get(m).getCourseID().equals(courseName))
-                        coursePosition = m;  // relative to courses
+                for (int k=0; i<courses.size(); k++) {
+                    if (courses.get(k).getCourseID().equals(courseName))
+                        coursePosition = k;  // relative to courses
                 }
                 
                 double[][] SCStatPair = generateCourseStatPairs(students, courses, courseName, coursePosition);
@@ -45,26 +49,31 @@ public class MarkData {
                 int studentPosition = courses.get(coursePosition).getStudentIDPosition(studentID); // position in courses
                 //since student position in courses is equivalent to student position in SCStatPair, then
                 double StudentSDinCourse = SCStatPair[studentPosition][1];
-                double classAverageSD = 0;
+                double classAverageSD = 0.0;
                 for (int k=0; k<SCStatPair.length; k++) { // row lenght (SCStatPair.length == hultSize)
                     if (k != studentPosition) {
                         classAverageSD += SCStatPair[k][1];
                     }
-                    classAverageSD = classAverageSD/(SCStatPair.length-1);
+                    classAverageSD = classAverageSD / (SCStatPair.length-1);
                 }
-                pb += StudentSDinCourse/classAverageSD;
+                pb += StudentSDinCourse / classAverageSD;
             }
-            pb = pb/students.get(i).getCoursesList().size(); // (sum of SDs/SDca)/n
+            pb = pb / students.get(i).getCoursesList().size(); // (sum of SDs/SDca)/n
             
-            //pc...
+            for (int j=0; j<students.get(i).getCoursesList().size(); j++) {
+                pc = findStudentCourseMean(students.get(i).getCourseAt(j));
+            }
+            pc = students.get(i).getCourseAverage() - (pc / students.get(i).getCoursesList().size()); // (sum of SDs/SDca)/n
+            
             
             try {
-            orderedStudents.add(new StudentInNeed(students.get(i), pa, pb, pc));
+            orderedStudents.add(new StudentInNeed(students.get(i), pa*aFactor, pb*bFactor, pc*cFactor));
             } catch (Exception e) { // discard student
                 System.err.println("analysis error: student " + students.get(i).getID() + " had to be discarded");
             }
         }
         
+        //orderedStudents are unordered and need to be sorted
         return orderedStudents;
     }
     
