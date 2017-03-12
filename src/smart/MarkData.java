@@ -20,7 +20,7 @@ public class MarkData {
      * @return ordered ArrayList of Students in need
      */
     public static ArrayList analysis(String file){
-        ArrayList orderedStudents = new ArrayList<StudentInNeed>();
+        ArrayList<StudentInNeed> orderedStudents = new ArrayList();
         ArrayList courses;
         ArrayList students;
         

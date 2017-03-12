@@ -13,13 +13,13 @@ import java.util.ArrayList;
  */
 public class MarkDataInput {
     public static ArrayList getStudents(String file) {
-        ArrayList students = new ArrayList<Student>();
+        ArrayList<Student> students = new ArrayList<>();
         //...
         return students;
     }
     
     public static ArrayList getCourses(String file) {
-        ArrayList courses = new ArrayList<Course>();
+        ArrayList<Course> courses = new ArrayList();
         //...
         return courses;
     }
