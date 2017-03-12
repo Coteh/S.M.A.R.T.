@@ -16,22 +16,75 @@ public class MarkData {
     private static final double bFactor = 1.0;
     private static final double cFactor = 1.0;
     private static final double weightFactor = 0.15;
+    private static final double defaultMark = 0.7;
     
+    
+    private static ArrayList<Course> allCoursesB;
+    private static ArrayList<Student> allStudentsB;
     public static void main(String[] args) {
-        ArrayList<Double> weights = new ArrayList<>();
-        ArrayList<Double> marks = new ArrayList<>();
-        StudentCourse student = new StudentCourse("Shit course");
-        student.addMark(0.0, 0.02);
-        student.addMark(0.7, 0.3);
-        student.addMark(0.8, 0.2);
-        student.addMark(0.3, 0.1);
-        student.addMark(0.01, 0.02);
+        ArrayList<StudentCourse> enroled = new ArrayList<>();
+        StudentCourse studentC = new StudentCourse("Shit course");
+        studentC.addMark(0.0, 0.02);
+        studentC.addMark(0.7, 0.3);
+        studentC.addMark(0.8, 0.2);
+        studentC.addMark(0.3, 0.1);
+        studentC.addMark(0.01, 0.02);
+        enroled.add(studentC);
+        studentC = new StudentCourse("Great Course, the best course");
+        studentC.addMark(0.6, 0.1);
+        studentC.addMark(0.7, 0.3);
+        studentC.addMark(0.8, 0.2);
+        studentC.addMark(0.4, 0.1);
+        studentC.addMark(0.85, 0.2);
+        enroled.add(studentC);
+        Student stu;
+        try {
+            stu = new Student("Stu", "0091125", "Stu@somewhere.com", 0.90, enroled);
+        } catch (Exception e) {
+            System.err.println("stu error");
+            return;
+        }
+        ArrayList<Student> allStudents = new ArrayList<>();
+        allStudents.add(stu);
         
-        double mean = findStudentCourseMean(student);
-        double weightedMean = findStudentCourseWeightedMean(student);
+        enroled = new ArrayList<>();
+        studentC = new StudentCourse("Great Course, the best course");
+        studentC.addMark(0.7, 0.1);
+        studentC.addMark(0.7, 0.3);
+        studentC.addMark(0.7, 0.2);
+        studentC.addMark(0.75, 0.1);
+        studentC.addMark(0.65, 0.2);
+        enroled.add(studentC);
+        try {
+            stu = new Student("Joe", "0087777", "Joe@somewhere.com", 0.60, enroled);
+        } catch (Exception e) {
+            System.err.println("stu error");
+            return;
+        }
+        allStudents.add(stu);
+        
+        ArrayList<String> enNames = new ArrayList<>();
+        enNames.add("Stu");
+        ArrayList<Course> allCourses = new ArrayList<>();
+        allCourses.add(new Course("Shit course", enNames));
+        enNames.add("Joe");
+        allCourses.add(new Course("Great Course, the best course", enNames));
+        double[][] stuData = generateCourseWeightedStatPairs(allStudents, allCourses, "Great Course, the best course", 1);
+        
+        allCoursesB = allCourses;
+        allStudentsB = allStudents;
+        ArrayList<StudentInNeed> sin = analysis("");
+        
+        double mean = findStudentCourseMean(studentC);
+        double weightedMean = findStudentCourseWeightedMean(studentC);
         System.out.println("Mean: " + mean + ", Weighted mean: " + weightedMean);
-        System.out.println("SD: " + findStudentCourseSD(student, mean) + ", SWD: " + findStudentCourseWeightedSD(student, mean));
-        System.out.println("m: " + mSolve(student));
+        System.out.println("SD: " + findStudentCourseSD(studentC, mean) + ", SWD: " + findStudentCourseWeightedSD(studentC, mean));
+        System.out.println("m: " + mSolve(studentC));
+        
+        System.out.println(stuData[0][0] + ", " + stuData[0][1] + ", " + stuData[0][2]);
+        System.out.println(stuData[1][0] + ", " + stuData[1][1] + ", " + stuData[1][2]);
+        
+        System.out.println(sin.get(0).getName() + " = " + sin.get(0).getPriority() + ", " + sin.get(1).getName() + " = " + sin.get(1).getPriority());
     }
     
     /** analysis function
@@ -63,7 +116,6 @@ public class MarkData {
                 
                 int studentPosition = courses.get(coursePosition).getStudentIDPosition(studentID); // position in courses
                 //since student position in courses is equivalent to student position in SCStatPair, then
-                double mStudent = mSolve(students.get(i).getCourseAt(j));
                 StudentPartialPA += (SCStatPair[studentPosition][0] - SCStatPair[studentPosition][2]) / SCStatPair[studentPosition][1];
                 
                 double classAverageSD = 0.0;
@@ -76,10 +128,14 @@ public class MarkData {
                         mClassAverage += SCStatPair[k][2];
                     }
                 }
-                classAverageSD = classAverageSD / (SCStatPair.length-1);
-                classAverageMean = classAverageMean / (SCStatPair.length-1);
-                mClassAverage = mClassAverage / (SCStatPair.length-1);
-                ClassAveragePartialPA += (classAverageMean - mClassAverage) / classAverageSD;
+                if (SCStatPair.length > 1 && classAverageSD != 0.0) {
+                    classAverageSD = classAverageSD / (SCStatPair.length-1);
+                    classAverageMean = classAverageMean / (SCStatPair.length-1);
+                    mClassAverage = mClassAverage / (SCStatPair.length-1);
+                    ClassAveragePartialPA += (classAverageMean - mClassAverage) / classAverageSD;
+                } else {
+                    ClassAveragePartialPA = defaultMark;
+                }
             }
             pa = (StudentPartialPA * ClassAveragePartialPA) / students.get(i).getCoursesList().size(); // (sum of SDs/SDca)/n
             
@@ -105,9 +161,13 @@ public class MarkData {
                         classAverageSD += SCStatPair[k][1];
                     }
                 }
-                classAverageSD = classAverageSD / (SCStatPair.length-1);
-                pb += StudentSDinCourse / classAverageSD;
+                if (SCStatPair.length > 1) {
+                    classAverageSD = classAverageSD / (SCStatPair.length-1);
+                    if (classAverageSD != 0.0)
+                        pb += StudentSDinCourse / classAverageSD;
+                }
             }
+            //System.err.println(pb);
             pb = pb / students.get(i).getCoursesList().size(); // (sum of SDs/SDca)/n
             
             for (int j=0; j<students.get(i).getCoursesList().size(); j++) {
@@ -115,7 +175,7 @@ public class MarkData {
             }
             pc = students.get(i).getCourseAverage() - (pc / students.get(i).getCoursesList().size()); // (sum of SDs/SDca)/n
             
-            
+            //System.out.println(students.get(i).getName() + ": " + pa + ", " + pb + ", " + pc);
             try {
                 unorderedStudents.add(new StudentInNeed(students.get(i), pa*aFactor, pb*bFactor, pc*cFactor));
             } catch (Exception e) { // discard student
