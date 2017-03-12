@@ -46,7 +46,7 @@ public class MarkData {
                     }
                 }
                 
-                double[][] SCStatPair = generateCourseStatPairs(students, courses, courseName, coursePosition);
+                double[][] SCStatPair = generateCourseWeightedStatPairs(students, courses, courseName, coursePosition);
                 String studentID = students.get(i).getID();
                 
                 int studentPosition = courses.get(coursePosition).getStudentIDPosition(studentID); // position in courses
@@ -81,7 +81,7 @@ public class MarkData {
                     }
                 }
                 
-                double[][] SCStatPair = generateCourseStatPairs(students, courses, courseName, coursePosition);
+                double[][] SCStatPair = generateCourseWeightedStatPairs(students, courses, courseName, coursePosition);
                 String studentID = students.get(i).getID();
                 
                 int studentPosition = courses.get(coursePosition).getStudentIDPosition(studentID); // position in courses
@@ -99,7 +99,7 @@ public class MarkData {
             pb = pb / students.get(i).getCoursesList().size(); // (sum of SDs/SDca)/n
             
             for (int j=0; j<students.get(i).getCoursesList().size(); j++) {
-                pc = findStudentCourseMean(students.get(i).getCourseAt(j));
+                pc = findStudentCourseWeightedMean(students.get(i).getCourseAt(j));
             }
             pc = students.get(i).getCourseAverage() - (pc / students.get(i).getCoursesList().size()); // (sum of SDs/SDca)/n
             
@@ -128,6 +128,61 @@ public class MarkData {
         }
         return subAverageWeightedMark/subAverageWeight; // normalize output
     }
+    
+    private static double[][] generateCourseWeightedStatPairs(ArrayList<Student> students, ArrayList<Course> courses, String courseName, int coursePosition) {
+        int hultSize = courses.get(coursePosition).getEnrolledStudentIDs().length;
+        int j=0;
+        int studentCoursePos;
+        double[][] statPairs = new double[hultSize][3];
+        for (Student i : students) {
+            if (j == hultSize) // hulting gaurd for statPairs
+                break;
+            studentCoursePos = i.isTakingCourse(courseName);  // assuming that the position of student i in Students is stable onto courses
+            if (studentCoursePos >= 0) {
+                StudentCourse studentCourse = i.getCourseAt(studentCoursePos);
+                statPairs[j][0] = findStudentCourseWeightedMean(studentCourse);
+                statPairs[j][1] = findStudentCourseWeightedSD(studentCourse, statPairs[j][0]);
+                statPairs[j][2] = mSolve(studentCourse);
+                j++;
+            }
+        }
+        return statPairs;
+    }
+    
+    /** find student course standard deviation
+     * consider returning weighted standard deviation of the course
+     * @param student
+     * @param mean
+     * @return standard deviation
+     */
+    private static double findStudentCourseWeightedSD(StudentCourse student, double weightedMean) {
+        int NumOfNonZeroWeights = 0;
+        double mark = 0;
+        double weightSum = 0;
+        for (int i=0; i<student.numberOfMarks(); i++) {
+            if (student.getWeightAt(i) != 0)
+                NumOfNonZeroWeights++;
+            weightSum += student.getWeightAt(i);
+            mark += student.getWeightAt(i) * Math.pow(student.getMarkAt(i) - weightedMean, 2); // w*(x-mu)^2
+        }
+        return Math.sqrt((mark/((NumOfNonZeroWeights-1)*weightSum))/NumOfNonZeroWeights);
+    }
+    
+    /** find student course mean
+     * returns the mean of the marks in the course
+     * @param student
+     * @return mean
+     */
+    private static double findStudentCourseWeightedMean(StudentCourse student) {
+        double mark = 0;
+        double weightSum = 0;
+        for (int i=0; i<student.numberOfMarks(); i++) {
+            mark += student.getMarkAt(i)*student.getWeightAt(i);
+            weightSum += student.getWeightAt(i);
+        }
+        return mark/weightSum;
+    }
+
     
     /**
      * 
