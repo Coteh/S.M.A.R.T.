@@ -28,11 +28,31 @@ public class MarkData {
         return orderedStudents;
     }
     
-    private double[][] generateStudentToCourseStatPair(ArrayList<Student> students, ArrayList<Course> courses, int coursePosition, String course) {
+    /**
+     * 
+     * @param students
+     * @param courses
+     * @param coursePosition  int position of subject course in courses
+     * @param courseName  name of course
+     * @return double[student relative to course][0,1 = mean, SD]
+     */
+    private double[][] generateStudentToCourseStatPair(ArrayList<Student> students, ArrayList<Course> courses, int coursePosition, String courseName) {
         int hultSize = courses.get(coursePosition).getEnrolledStudentIDs().length;
-        double[][] value = new double[hultSize][2];
-        
-        return value;
+        int j=0;
+        int studentCoursePos;
+        double[][] statPairs = new double[hultSize][2];
+        for (Student i : students) {
+            if (j == hultSize) // hulting gaurd for statPairs
+                break;
+            studentCoursePos = i.isTakingCourse(courseName);  // assuming that the position of student i in Students is stable onto courses
+            if (studentCoursePos >= 0) {
+                StudentCourse studentCourse = i.getCourseAt(studentCoursePos);
+                statPairs[j][0] = findStudentCourseMean(studentCourse);
+                statPairs[j][1] = findStudentCourseSD(studentCourse, statPairs[j][0]);
+                j++;
+            }
+        }
+        return statPairs;
     }
     
     private double findStudentCourseSD(StudentCourse student, double mean) {
