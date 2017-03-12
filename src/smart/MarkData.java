@@ -73,7 +73,7 @@ public class MarkData {
         
         allCoursesB = allCourses;
         allStudentsB = allStudents;
-        ArrayList<StudentInNeed> sin = analysis("");
+        ArrayList<StudentInNeed> sin = analysis();
         
         double mean = findStudentCourseMean(studentC);
         double weightedMean = findStudentCourseWeightedMean(studentC);
