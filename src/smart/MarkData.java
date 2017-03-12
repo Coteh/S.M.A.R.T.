@@ -18,8 +18,7 @@ public class MarkData {
     private static final double weightFactor = 0.15;
     
     public static void main(String[] args) {
-        double[][] test = new double[5][2];
-        System.out.println(test.length); // == 5
+        StudentCourse student = new StudentCourse();
     }
     
     /** analysis function
@@ -29,7 +28,7 @@ public class MarkData {
      * @return ordered ArrayList of Students in need
      */
     public static ArrayList analysis(String file){
-        ArrayList<StudentInNeed> orderedStudents = new ArrayList();
+        ArrayList<StudentInNeed> unorderedStudents = new ArrayList();
         ArrayList<Course> courses = MarkDataInput.getCourses();
         ArrayList<Student> students = MarkDataInput.getStudents();
         double pa=0.0, pb=0.0, pc=0.0;
@@ -105,14 +104,23 @@ public class MarkData {
             
             
             try {
-                orderedStudents.add(new StudentInNeed(students.get(i), pa*aFactor, pb*bFactor, pc*cFactor));
+                unorderedStudents.add(new StudentInNeed(students.get(i), pa*aFactor, pb*bFactor, pc*cFactor));
             } catch (Exception e) { // discard student
                 System.err.println("analysis error: student " + students.get(i).getID() + " had to be discarded");
             }
         }
         
-        //orderedStudents are unordered and need to be sorted
-        return orderedStudents;
+        ArrayList<StudentInNeed> orderedS = new ArrayList<>();
+        while (unorderedStudents.size() > 0) {
+            int heighest = 0;
+            for (int i=1; i<unorderedStudents.size(); i++) {
+                if (unorderedStudents.get(heighest).getPriority() < unorderedStudents.get(i).getPriority())
+                    heighest = i;
+            }
+            orderedS.add(unorderedStudents.get(heighest));
+            unorderedStudents.remove(heighest);
+        }
+        return orderedS;
     }
     
     private static double mSolve(StudentCourse student) {
