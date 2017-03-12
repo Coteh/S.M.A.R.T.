@@ -35,10 +35,10 @@ app.get("/students", function(req, res) {
             return;
         }
         for (var i = 0; i < results.length; i++) {
-            var responseStr = results[i].studentid;
+            var responseStr = results[i].studentId;
             responseStr += "," + results[i].email;
-            responseStr += "," + results[i].courseAverage;
-            responseStr += "," + results[i].name;
+            responseStr += "," + results[i].courseAvg;
+            responseStr += "," + results[i].nameOfStudent;
             res.write(responseStr + "\n");
         }
         res.end();

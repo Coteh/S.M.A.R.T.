@@ -25,10 +25,10 @@ public class MarkData {
     /** analysis function
      * takes in a spreadsheet file (which is passed off to MarkDataInput)
      * returns ordered ArrayList of Students in need (first element is highest priority)
-     * @param file  student input spreadsheet
+     * @param 
      * @return ordered ArrayList of Students in need
      */
-    public static ArrayList analysis(String file){
+    public static ArrayList analysis(){
         ArrayList<StudentInNeed> orderedStudents = new ArrayList();
         ArrayList<Course> courses = MarkDataInput.getCourses();
         ArrayList<Student> students = MarkDataInput.getStudents();

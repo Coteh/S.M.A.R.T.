@@ -13,18 +13,6 @@ import java.util.ArrayList;
  */
 public class EmailGenerationSystem {
     private static final String helperEmail = "temp@example.ca";
-
-    /** main
-     *  method for running system
-     * @param args  {input file address, data file address for students who have been already contacted}
-     */
-    public static void main(String[] args) {
-        if (args.length < 2) {
-            System.err.println("Main Error: not enough file directories");
-            return;
-        }
-        ArrayList orderedStudents = MarkData.analysis(args[0]);
-    }
     
     private void sendEmail(StudentInNeed student) { 
         //unpack the Student in need and send the email with the students information
