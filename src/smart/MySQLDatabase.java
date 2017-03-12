@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gradesmart;
+package smart;
 import java.sql.*;
 
 import java.util.logging.Level;
@@ -39,6 +39,7 @@ public class MySQLDatabase {
     
     public void createTable(String tableName, String variables){
         String sqlStatement = "CREATE TABLE "+ tableName + " (" + variables + " )";
+        System.out.println(sqlStatement);
         try{
             Statement newStatement = dataBaseConnection.createStatement();
             newStatement.executeUpdate(sqlStatement);
@@ -47,15 +48,39 @@ public class MySQLDatabase {
         }
     }
     
-    public void insertInTable(String tableName, String variablesToInsert){
-        String sqlStatement = "INSERT INTO "+tableName +  " VARIABLES( "+ variablesToInsert +" )";
+    public void insertInTableGrades(String tableName, int studentId, String courseId, double mark, double wheight,int markTime){
+        String variables = "studentId INT, courseId VARCHAR(11), mark DOUBLE, wheight DOUBLE, markTime INT";
+        String sqlStatement = "INSERT INTO GRADES (studentId, courseId, mark, wheight, markTime) values ( ?,?,?,?,? )";
         try{
-            Statement newStatement = dataBaseConnection.createStatement();
-            newStatement.executeUpdate(sqlStatement);
+            PreparedStatement preparedStmnt = dataBaseConnection.prepareStatement(sqlStatement);
+            preparedStmnt.setInt(1,studentId);
+            preparedStmnt.setString(2,courseId);
+            preparedStmnt.setDouble(3,mark);
+            preparedStmnt.setDouble(4,wheight);
+            preparedStmnt.setInt(5,markTime);
+            preparedStmnt.execute();
         }catch(SQLException e){
             System.out.println(e.getMessage());
         }
     }
+    
+    public void insertInTableStudent(String tableName, int studentId, String email, double courseAvg, String nameOfStudent){
+      
+        String sqlStatement = "INSERT INTO STUDENTS (studentId, email, courseAvg, nameOfStudent) values ( ?,?,?,? )";
+        
+        System.out.println(sqlStatement);
+        try{
+            PreparedStatement preparedStmnt = dataBaseConnection.prepareStatement(sqlStatement);
+            preparedStmnt.setInt(1,studentId);
+            preparedStmnt.setString(2,email);
+            preparedStmnt.setDouble(3,courseAvg);
+            preparedStmnt.setString(4,nameOfStudent);
+            preparedStmnt.execute();
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+    
      public void insertInTable(String tableName, String variablesToInsert, String id, String foriegnTable){
         String sqlStatement = "INSERT INTO "+tableName +  " VARIABLES("+ variablesToInsert + "PRIMARYKEY(" + id +") FORIEGN KEY( "+foriegnTable+" )";
         try{
@@ -67,6 +92,17 @@ public class MySQLDatabase {
     }
      public ResultSet retrieveFromTable( String select, String from, String where ){
          String sqlStatement = "Select "+select + " From "+ from + " Where " + where;
+         ResultSet currentResults = null;
+         try{
+            Statement newStatement = dataBaseConnection.createStatement();
+            currentResults = newStatement.executeQuery(sqlStatement); 
+         }catch(SQLException e){
+             System.out.println(e.getMessage());
+         }
+         return currentResults;
+     }
+      public ResultSet retrieveFromTable( String select, String from){
+         String sqlStatement = "select "+select + " from "+ from;
          ResultSet currentResults = null;
          try{
             Statement newStatement = dataBaseConnection.createStatement();

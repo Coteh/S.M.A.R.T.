@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gradesmart;
+package smart;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,10 +12,6 @@ import java.util.Scanner;
 import java.util.StringTokenizer;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 /**
  *
  * @author daniel
@@ -115,7 +111,7 @@ public class CourseInfo {
 
         for(int j = 0; j < 5; j = j + 1){
             String variables = Integer.toString(studentId) + " " + nameOfCourse + " " + Integer.toString(gradeArray[currentStudent][j])+ " " + Integer.toString(wheights[j]);
-            sqlDatabase.insertInTable("grades", variables);
+            sqlDatabase.insertInTableGrades("GRADES",studentId,nameOfCourse, (double)gradeArray[currentStudent][j], (double)wheights[j], j);
         }
                 
         

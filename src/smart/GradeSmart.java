@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package gradesmart;
+package smart;
 
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -19,7 +19,7 @@ public class GradeSmart {
     int[] idNumbers = new int[200];
     ArrayList<CourseInfo> rawGradeData = new ArrayList<>();
     int[][] inCourse = new int[200][10];
-    String fileLocation = "/media/daniel/dirtyDan/Guelph hacks/firstNames.txt";
+    String fileLocation = "firstNames.txt";
     String[] nameArray = new String[200];
     
     /**
@@ -29,7 +29,8 @@ public class GradeSmart {
         for(int i = 0; i< 10; i = i + 1){
             CourseInfo newCourse = new CourseInfo("comp " + Integer.toString((i * 10) + 1000));
             newCourse.createWorkSheetData();
-            newCourse.printData(); 
+            rawGradeData.add(newCourse);
+            //newCourse.printData(); 
         }
         for( int i = 0; i < 200; i = i + 1)   {
             for( int j = 0; j < 10; j = j + 1){
@@ -40,18 +41,20 @@ public class GradeSmart {
     }
     public static void main(String[] args) {
         //CourseInfo rawGradeData = new CourseInfo();
+        MySQLDatabase currentDatabase = new MySQLDatabase("jdbc:mysql://localhost:3306/smart?autoReconnect=true&useSSL=false", "root", "password");
         GradeSmart newBatch = new GradeSmart();
         newBatch.parseNames();
         newBatch.createCourseSelection();
         newBatch.generateStudentNumber();
-        newBatch.printIds();
-        newBatch.printInCourse();
+        //newBatch.printIds();
+        //newBatch.printInCourse();
+        newBatch.moveToSql(currentDatabase);
         
        
     }
     
     public void generateStudentNumber(){
-        for(int i = 1; i < 200; i = i + 1){
+        for(int i = 0; i < 200; i = i + 1){
            idNumbers[i] = (i * 1000) + (int)(Math.random() * 1000) + 1000000 ;
         }
     }
@@ -98,21 +101,24 @@ public class GradeSmart {
     public void moveToSql(MySQLDatabase sqlDatabase){
         int numOfCourses = 0;
         sqlDatabase.connectToDataBase();
-        String variables = "studentId INT, courseId VARCHAR(11), mark DOUBLE, wheight DOUBLE, markTime INT";
-        sqlDatabase.createTable("grades", variables);
-        variables = "studentId INT, email VARCHAR(25), courseAvg DOUBLE, nameOfStudent VARCHAR(125)";
-        sqlDatabase.createTable("student", variables);
+        String variables = "studentId INT not NULL, courseId VARCHAR(11), mark DOUBLE, wheight DOUBLE, markTime INT";
+        sqlDatabase.createTable("GRADES", variables);
+        variables = "studentId INT not NULL, email VARCHAR(25), courseAvg DOUBLE, nameOfStudent VARCHAR(125)";
+        sqlDatabase.createTable("STUDENTS", variables);
         Iterator<CourseInfo> i = rawGradeData.iterator();
         while(i.hasNext()){
             CourseInfo currentCourse = i.next();
             for(int j = 0; j < 200; j = j + 1){
                 String studentVariable = Integer.toString(idNumbers[j]) + " " + nameArray[j] + " " + Double.toString( Math.random() * 100) +  " " + nameArray[j];
-                sqlDatabase.insertInTable("student", studentVariable);
                 if(inCourse[j][numOfCourses] == 1){
+                    System.out.println("adding to dataBase");
                     currentCourse.moveToSql(sqlDatabase, idNumbers[j], j);
                 }
             }
             numOfCourses = numOfCourses + 1;   
+        }
+        for(int j = 0; j < 200; j = j + 1){
+            sqlDatabase.insertInTableStudent("STUDENTS",idNumbers[j],nameArray[j],( Math.random() * 100),nameArray[j] );
         }
         
     }
