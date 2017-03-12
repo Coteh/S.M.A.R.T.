@@ -12,8 +12,8 @@ import java.util.ArrayList;
  * @author James
  */
 public class Course {
-    private String courseID;
-    private final ArrayList<String> enrolledStudentIDsList;
+    private String courseID;  // course name not ID
+    private final ArrayList<String> enrolledStudentIDsList;  // student ID not student Name
     
     public Course() {
         this.enrolledStudentIDsList = new ArrayList<>();
@@ -25,5 +25,12 @@ public class Course {
     
     public String[] getEnrolledStudentIDs() {
         return this.enrolledStudentIDsList.toArray(new String[0]);
+    }
+    
+    public int getStudentIDPosition(String studentID) {
+        for (int i=0; i<enrolledStudentIDsList.size(); i++) {
+            return i;
+        }
+        return -1;
     }
 }
