@@ -15,7 +15,8 @@ public class Course {
     private String courseID;
     private final ArrayList<String> enrolledStudentIDsList;
     
-    public Course() {
+    public Course(String courseID) {
+        this.courseID = courseID;
         this.enrolledStudentIDsList = new ArrayList<>();
     }
     

@@ -21,14 +21,12 @@ public class MarkData {
      */
     public static ArrayList analysis(String file){
         ArrayList<StudentInNeed> orderedStudents = new ArrayList();
-        ArrayList<Course> courses = MarkDataInput.getCourses(file);
-        ArrayList<Student> students = MarkDataInput.getStudents(file);
+        ArrayList<Course> courses = MarkDataInput.getCourses();
+        ArrayList<Student> students = MarkDataInput.getStudents();
         
         
         return orderedStudents;
     }
-    
-    
     
     private double findStudentCourseSD(StudentCourse student, double mean) {
         double weightedMark = 0;
