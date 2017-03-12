@@ -16,6 +16,7 @@ public class StudentCourse {
     private final ArrayList<Double> marksList;
     private final ArrayList<Double> weightsList;
     
+    
     public StudentCourse() {
         this.marksList = new ArrayList<>();
         this.weightsList = new ArrayList<>();

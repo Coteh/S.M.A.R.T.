@@ -17,10 +17,6 @@ public class SmartMain {
      * @param args  {data file address for students who have been already contacted}
      */
     public static void main(String[] args) {
-        if (args.length < 1) {
-            System.err.println("usage: SmartMain [DATA_FILE_ADDRESS]");
-            return;
-        }
         ArrayList orderedStudents = MarkData.analysis();
     }
 }
