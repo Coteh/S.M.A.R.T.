@@ -5,7 +5,13 @@
  */
 package smart;
 
+import java.awt.Desktop;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -17,6 +23,18 @@ public class SmartMain {
      * @param args  {data file address for students who have been already contacted}
      */
     public static void main(String[] args) {
-        ArrayList orderedStudents = MarkData.analysis();
+        ArrayList<StudentInNeed> orderedStudents = MarkData.analysis();
+        
+        HTMLOutput html = new HTMLOutput(orderedStudents);
+        
+        if (Desktop.isDesktopSupported()) {
+            try {
+                Desktop.getDesktop().browse(new URI("results.html"));
+            } catch (URISyntaxException ex) {
+                Logger.getLogger(SmartMain.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(SmartMain.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 }

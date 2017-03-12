@@ -69,7 +69,7 @@ public class MarkDataInput {
             }
             
             Iterator<Student> i = instance.studentArray.iterator();
-            System.out.println("job done");
+//            System.out.println("job done");
             while (i.hasNext()) {
                 String currentCourseId = " nothing";
                 Student currentStudent = i.next();

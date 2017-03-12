@@ -23,14 +23,16 @@ public class MarkData {
     private static ArrayList<Student> allStudentsB;
     public static void main(String[] args) {
         ArrayList<StudentCourse> enroled = new ArrayList<>();
-        StudentCourse studentC = new StudentCourse("Shit course");
+        String courseA = "Course A";
+        String courseB = "Course B";
+        StudentCourse studentC = new StudentCourse(courseA);
         studentC.addMark(0.0, 0.02);
         studentC.addMark(0.7, 0.3);
         studentC.addMark(0.8, 0.2);
         studentC.addMark(0.3, 0.1);
         studentC.addMark(0.01, 0.02);
         enroled.add(studentC);
-        studentC = new StudentCourse("Great Course, the best course");
+        studentC = new StudentCourse(courseB);
         studentC.addMark(0.6, 0.1);
         studentC.addMark(0.7, 0.3);
         studentC.addMark(0.8, 0.2);
@@ -48,7 +50,7 @@ public class MarkData {
         allStudents.add(stu);
         
         enroled = new ArrayList<>();
-        studentC = new StudentCourse("Great Course, the best course");
+        studentC = new StudentCourse(courseB);
         studentC.addMark(0.7, 0.1);
         studentC.addMark(0.7, 0.3);
         studentC.addMark(0.7, 0.2);
@@ -66,10 +68,10 @@ public class MarkData {
         ArrayList<String> enNames = new ArrayList<>();
         enNames.add("Stu");
         ArrayList<Course> allCourses = new ArrayList<>();
-        allCourses.add(new Course("Shit course", enNames));
+        allCourses.add(new Course(courseA, enNames));
         enNames.add("Joe");
-        allCourses.add(new Course("Great Course, the best course", enNames));
-        double[][] stuData = generateCourseWeightedStatPairs(allStudents, allCourses, "Great Course, the best course", 1);
+        allCourses.add(new Course(courseB, enNames));
+        double[][] stuData = generateCourseWeightedStatPairs(allStudents, allCourses, courseB, 1);
         
         allCoursesB = allCourses;
         allStudentsB = allStudents;
