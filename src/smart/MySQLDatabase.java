@@ -47,8 +47,8 @@ public class MySQLDatabase {
         }
     }
     
-    public void insertInTable(String tableName, String variablesToInsert, String id){
-        String sqlStatement = "INSERT INTO "+tableName +  " VARIABLES("+ variablesToInsert + "PRIMARYKEY(" + id +") )";
+    public void insertInTable(String tableName, String variablesToInsert){
+        String sqlStatement = "INSERT INTO "+tableName +  " VARIABLES( "+ variablesToInsert +" )";
         try{
             Statement newStatement = dataBaseConnection.createStatement();
             newStatement.executeUpdate(sqlStatement);
@@ -56,5 +56,25 @@ public class MySQLDatabase {
             System.out.println(e.getMessage());
         }
     }
+     public void insertInTable(String tableName, String variablesToInsert, String id, String foriegnTable){
+        String sqlStatement = "INSERT INTO "+tableName +  " VARIABLES("+ variablesToInsert + "PRIMARYKEY(" + id +") FORIEGN KEY( "+foriegnTable+" )";
+        try{
+            Statement newStatement = dataBaseConnection.createStatement();
+            newStatement.executeUpdate(sqlStatement);
+        }catch(SQLException e){
+            System.out.println(e.getMessage());
+        }
+    }
+     public ResultSet retrieveFromTable( String select, String from, String where ){
+         String sqlStatement = "Select "+select + " From "+ from + " Where " + where;
+         ResultSet currentResults = null;
+         try{
+            Statement newStatement = dataBaseConnection.createStatement();
+            currentResults = newStatement.executeQuery(sqlStatement); 
+         }catch(SQLException e){
+             System.out.println(e.getMessage());
+         }
+         return currentResults;
+     }
     
 }
