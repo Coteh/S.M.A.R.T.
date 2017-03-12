@@ -48,4 +48,10 @@ public class StudentCourse {
         this.marksList.add(mark);
         this.weightsList.add(weight);
     }
+    
+    public int numberOfMarks() {
+        if (marksList.size() != weightsList.size())
+            return -1;
+        return marksList.size();
+    }
 }

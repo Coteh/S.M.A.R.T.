@@ -24,6 +24,27 @@ public class MarkData {
         ArrayList<Course> courses = MarkDataInput.getCourses(file);
         ArrayList<Student> students = MarkDataInput.getStudents(file);
         
+        
         return orderedStudents;
+    }
+    
+    
+    
+    private double findStudentCourseSD(StudentCourse student, double mean) {
+        double weightedMark = 0;
+        int i;
+        for (i=0; i<student.numberOfMarks(); i++) {
+            weightedMark += Math.pow(student.getMarkAt(i)*student.getWeightAt(i) - mean, 2); // (x-mu)^2
+        }
+        return weightedMark/(i-1); // i-1 subject to change depending on Bessel's correction (suspect I should use it since incomplete data results in a statistic?)
+    }
+    
+    private double findStudentCourseMean(StudentCourse student) {
+        double weightedMark = 0;
+        int i;
+        for (i=0; i<student.numberOfMarks(); i++) {
+            weightedMark += student.getMarkAt(i)*student.getWeightAt(i);
+        }
+        return weightedMark/i;
     }
 }

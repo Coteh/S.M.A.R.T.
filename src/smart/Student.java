@@ -54,6 +54,14 @@ public class Student {
         return this.courseAverage;
     }
     
+    public int isTakingCourse(String courseName) {
+        for (int i=0; i<coursesList.size(); i++) {
+            if (coursesList.get(i).getName().equals(courseName))
+                return i;
+        }
+        return -1;
+    }
+    
     public StudentCourse getCourseAt(int index) {
         if (index < 0 || index >= this.coursesList.size()) {
             return null;
