@@ -109,14 +109,26 @@ public class Student {
     public void addCourse(StudentCourse course) {
         this.coursesList.add(course);
     }
+    
+    private static Course findCourseFromCourseArray(ArrayList<Course> courseList, String courseId) {
+        for (int i = 0; i < courseList.size(); i++) {
+            if (courseList.get(i).getCourseID().equals(courseId)) {
+                return courseList.get(i);
+            }
+        }
+        
+        return null;
+    }
 
     public static void main(String[] args) {
         // Test student
         Student student;
         ArrayList<Student> studentArray = new ArrayList<>();
-
+        ArrayList<Course> courseArray = new ArrayList<>();
         MySQLDatabase currentDatabase = new MySQLDatabase("jdbc:mysql://localhost:3306/smart?autoReconnect=true&useSSL=false", "root", "password");
         currentDatabase.connectToDataBase();
+        
+        //Populate student array
         ResultSet generalResults = currentDatabase.retrieveFromTable("*", "STUDENTS");
         try {
             while (generalResults.next()) {
@@ -128,11 +140,26 @@ public class Student {
             }
 
         } catch (SQLException e) {
-            System.out.println(e.getMessage());
-            System.out.println("and error in the data base occured");
+            System.err.println(e.getMessage());
+            System.err.println("an error in the data base occured");
         } catch (Exception t) {
-            System.out.println(t);
+            System.err.println(t);
         }
+        
+        //Populate course array
+        generalResults = currentDatabase.retrieveFromTable("DISTINCT courseId", "GRADES");
+        try {
+            while (generalResults.next()) {
+                String courseId = generalResults.getString("courseId");
+                courseArray.add(new Course(courseId));
+            }
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
+            System.err.println("an error in the data base occured");
+        } catch (Exception t) {
+            System.err.println(t);
+        }
+        
         Iterator<Student> i = studentArray.iterator();
         System.out.println("job done");
         while (i.hasNext()) {
@@ -140,7 +167,7 @@ public class Student {
             Student currentStudent = i.next();
             StudentCourse currentCourse = null;
             System.out.println(currentStudent.getID() + " " + currentStudent.getEmail() + " " + currentStudent.getCourseAverage() + " " + currentStudent.getName());
-            generalResults = currentDatabase.retrieveFromTable("*", "GRADES", "studentId = "+currentStudent.getID());
+            generalResults = currentDatabase.retrieveFromTable("*", "GRADES", "studentId = " + currentStudent.getID());
             try {
                 while (generalResults.next()) {
                     String studentId = Integer.toString(generalResults.getInt("studentId"));
@@ -148,34 +175,59 @@ public class Student {
                     double mark = generalResults.getDouble("mark");
                     double wheight = generalResults.getDouble("wheight");
                     int markTime = generalResults.getInt("markTime");
-                    if(!courseId.equals(currentCourseId)){
+                    if (!courseId.equals(currentCourseId)) {
                         currentCourse = new StudentCourse();
                         currentCourse.setName(courseId);
+                        currentStudent.addCourse(currentCourse);
                         currentCourseId = courseId;
                     }
-                    if(currentCourse != null){
+                    if (currentCourse != null) {
                         currentCourse.addMark(mark, wheight);
                     }
-                  
-                    System.out.println(courseId +" "+ studentId +" "+ mark + Double.toString(mark) + Double.toString(wheight)+ Integer.toString(markTime));
-                    
+                    System.out.println(courseId + " " + studentId + " " + mark + Double.toString(mark) + " " + Double.toString(wheight) + " " + Integer.toString(markTime));
+                }
+                currentStudent.addCourse(currentCourse);
+
+            } catch (SQLException e) {
+                System.err.println(e.getMessage());
+                System.err.println("an error in the data base occured");
+            }
+        }
+        i = studentArray.iterator();
+        
+        while (i.hasNext()) {
+            String currentCourseId = " nothing";
+            Student currentStudent = i.next();
+            Course course = null;
+            try {
+                generalResults = currentDatabase.retrieveFromTable("DISTINCT studentId, courseId", "GRADES", "studentId = " + currentStudent.getID());
+                while (generalResults.next()) {
+                    String studentId = Integer.toString(generalResults.getInt("studentId"));
+                    String courseId = generalResults.getString("courseId");
+                    if (!courseId.equals(currentCourseId)) {
+                        course = findCourseFromCourseArray(courseArray, courseId);
+                        currentCourseId = courseId;
+                    }
+                    if (course != null) {
+                        course.addEnrolledStudentID(studentId);
+                    }
                 }
 
             } catch (SQLException e) {
-                System.out.println(e.getMessage());
-                System.out.println("and error in the data base occured");
+                System.err.println(e.getMessage());
+                System.err.println("an error in the data base occured");
+            } catch (Exception t) {
+                System.err.println(t);
             }
         }
-        /*
-        try {
-            student = new Student("james", "1234567", "test@mail.uoguelph.ca", 80.0);
-            student.addCourse(new StudentCourse("CLAS 2000"));
-            student.getCourseAt(0).addMark(70.0, 0.25);
-            System.out.println(student.getID() + " " + student.getEmail() + " " + student.getCourseAverage()
-                        + " " + student.getCourseAt(0).getName() + " " + student.getCourseAt(0).getWeightAt(0));
-        } catch (Exception ex) {
-            Logger.getLogger(Student.class.getName()).log(Level.SEVERE, null, ex);
-        } */
+        
+        for (int j = 0; j < courseArray.size(); j++) {
+            System.out.println(courseArray.get(j).getCourseID());
+            String[] studentIDs = courseArray.get(j).getEnrolledStudentIDs();
+            for (int k = 0; k < studentIDs.length; k++) {
+                System.out.println("-> " + studentIDs[k]);
+            }
+        }
     }
 
 }

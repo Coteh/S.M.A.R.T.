@@ -34,4 +34,8 @@ public class Course {
         }
         return -1;
     }
+    
+    public void addEnrolledStudentID(String enrolledStudentID) {
+        this.enrolledStudentIDsList.add(enrolledStudentID);
+    }
 }
