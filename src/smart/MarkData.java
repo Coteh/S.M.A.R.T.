@@ -18,7 +18,20 @@ public class MarkData {
     private static final double weightFactor = 0.15;
     
     public static void main(String[] args) {
-        StudentCourse student = new StudentCourse();
+        ArrayList<Double> weights = new ArrayList<>();
+        ArrayList<Double> marks = new ArrayList<>();
+        StudentCourse student = new StudentCourse("Shit course");
+        student.addMark(0.0, 0.02);
+        student.addMark(0.7, 0.3);
+        student.addMark(0.8, 0.2);
+        student.addMark(0.3, 0.1);
+        student.addMark(0.01, 0.02);
+        
+        double mean = findStudentCourseMean(student);
+        double weightedMean = findStudentCourseWeightedMean(student);
+        System.out.println("Mean: " + mean + ", Weighted mean: " + weightedMean);
+        System.out.println("SD: " + findStudentCourseSD(student, mean) + ", SWD: " + findStudentCourseWeightedSD(student, mean));
+        System.out.println("m: " + mSolve(student));
     }
     
     /** analysis function
@@ -31,7 +44,7 @@ public class MarkData {
         ArrayList<StudentInNeed> unorderedStudents = new ArrayList();
         ArrayList<Course> courses = MarkDataInput.getCourses();
         ArrayList<Student> students = MarkDataInput.getStudents();
-        double pa=0.0, pb=0.0, pc=0.0;
+        double pa, pb=0.0, pc=0.0;
         for (int i=0; i<students.size(); i++) {
             double ClassAveragePartialPA = 0.0;
             double StudentPartialPA = 0.0;
@@ -173,7 +186,7 @@ public class MarkData {
             weightSum += student.getWeightAt(i);
             mark += student.getWeightAt(i) * Math.pow(student.getMarkAt(i) - weightedMean, 2); // w*(x-mu)^2
         }
-        return Math.sqrt((mark/((NumOfNonZeroWeights-1)*weightSum))/NumOfNonZeroWeights);
+        return Math.sqrt((mark/((NumOfNonZeroWeights-1)*weightSum))/(double)NumOfNonZeroWeights);
     }
     
     /** find student course mean
