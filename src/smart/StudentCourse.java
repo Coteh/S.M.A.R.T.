@@ -16,9 +16,13 @@ public class StudentCourse {
     private final ArrayList<Double> marksList;
     private final ArrayList<Double> weightsList;
     
-    public StudentCourse(String name) {
+    public StudentCourse() {
         this.marksList = new ArrayList<>();
         this.weightsList = new ArrayList<>();
+    }
+    
+    public StudentCourse(String name) {
+        this();
         this.name = name;
     }
     

@@ -6,6 +6,8 @@
 package smart;
 
 import java.util.ArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -34,7 +36,20 @@ public class Student {
         this.coursesList = coursesList;
     }
     
-    public Student() {
+    public Student(String name, String id, String email, double courseAverage) throws Exception {
+        if (name == null || name.isEmpty()) {
+            throw new Exception("Student: empty value(s)");
+        }
+        if (id == null || id.length() != 7) {
+            throw new Exception("Student: wrong number of digits");
+        }
+        if (email == null || email.isEmpty()) {
+            throw new Exception("Student: coursesList does not exist");
+        }
+        this.name = name;
+        this.id = id;
+        this.email = email;
+        this.courseAverage = courseAverage;
         this.coursesList = new ArrayList<>();
     }
     
@@ -91,14 +106,15 @@ public class Student {
     
     public static void main(String[] args) {
         // Test student
-        Student student = new Student();
-        student.setID("1234567");
-        student.setEmail("test@mail.uoguelph.ca");
-        student.setCourseAverage(80.0);
-        student.addCourse(new StudentCourse("CLAS 2000"));
-        student.getCourseAt(0).addMark(70.0, 0.25);
-        System.out.println(student.getID() + " " + student.getEmail() + " " + student.getCourseAverage()
+        Student student;
+        try {
+            student = new Student("james", "1234567", "test@mail.uoguelph.ca", 80.0);
+            student.addCourse(new StudentCourse("CLAS 2000"));
+            student.getCourseAt(0).addMark(70.0, 0.25);
+            System.out.println(student.getID() + " " + student.getEmail() + " " + student.getCourseAverage()
                         + " " + student.getCourseAt(0).getName() + " " + student.getCourseAt(0).getWeightAt(0));
-                
+        } catch (Exception ex) {
+            Logger.getLogger(Student.class.getName()).log(Level.SEVERE, null, ex);
+        }        
     }
 }
