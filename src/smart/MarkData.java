@@ -21,8 +21,8 @@ public class MarkData {
      */
     public static ArrayList analysis(String file){
         ArrayList<StudentInNeed> orderedStudents = new ArrayList();
-        ArrayList courses;
-        ArrayList students;
+        ArrayList<Course> courses = MarkDataInput.getCourses(file);
+        ArrayList<Student> students = MarkDataInput.getStudents(file);
         
         return orderedStudents;
     }
