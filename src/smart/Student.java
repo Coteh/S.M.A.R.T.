@@ -12,13 +12,34 @@ import java.util.ArrayList;
  * @author James
  */
 public class Student {
+    private String name;
     private String id;
     private String email;
-    private Double courseAverage;
+    private double courseAverage;
     final private ArrayList<StudentCourse> coursesList;
+    
+    
+    public Student(String name, String id, String email, double courseAverage, ArrayList<StudentCourse> coursesList) throws Exception {
+        if (name.isEmpty() || id.isEmpty() || email.isEmpty())
+            throw new Exception("Student: empty value(s)");
+        if (id.length() != 7)
+            throw new Exception("Student: wrong number of digits");
+        if (coursesList == null)
+            throw new Exception("Student: coursesList does not exist");
+        
+        this.name = name;
+        this.id = id;
+        this.email = email;
+        this.courseAverage = courseAverage;
+        this.coursesList = coursesList;
+    }
     
     public Student() {
         this.coursesList = new ArrayList<>();
+    }
+    
+    public String getName() {
+        return name;
     }
     
     public String getID() {
@@ -50,6 +71,10 @@ public class Student {
     
     public void setCourseAverage(Double courseAverage) {
         this.courseAverage = courseAverage;
+    }
+    
+    public ArrayList getCoursesList() {
+        return coursesList;
     }
     
     public void addCourse(StudentCourse course) {

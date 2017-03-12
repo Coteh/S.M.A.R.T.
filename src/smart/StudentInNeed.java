@@ -5,45 +5,30 @@
  */
 package smart;
 
+import java.util.ArrayList;
+
 
 /**
  * Students in Need of Help
  * @author James
  */
-public class StudentInNeed {
-    private final String name;
-    private final String id;
-    private final String email;
+public class StudentInNeed extends Student {
     private final double priority;
     private final double pa; // a type priority
     private final double pb;
     private final double pc;
     
-    public StudentInNeed(String name, String id, String email, double pa, double pb, double pc) throws Exception{
-        if (name.isEmpty() || id.isEmpty() || email.isEmpty())
-            throw new Exception("SIN: empty value(s)");
-        if (id.length() != 7)
-            throw new Exception("SIN: wrong number of digits");
+    public StudentInNeed(Student old, double pa, double pb, double pc) throws Exception {
+        this(old.getName(), old.getID(), old.getEmail(), old.getCourseAverage(), old.getCoursesList(), pa, pb, pc);
+    }
+    
+    public StudentInNeed(String name, String id, String email, double courseAverage, ArrayList<StudentCourse> coursesList, double pa, double pb, double pc) throws Exception{
+        super(name, id, email, courseAverage, coursesList);
         
-        this.name = name;
-        this.id = id;
-        this.email = email;
         this.pa = pa;
         this.pb = pb;
         this.pc = pc;
         this.priority = pa + pb + pc;
-    }
-    
-    public String getName() {
-        return name;
-    }
-    
-    public String getID() {
-        return id;
-    }
-    
-    public String getEmail() {
-        return email;
     }
     
     public double getPriority() {
