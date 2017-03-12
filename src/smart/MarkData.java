@@ -12,8 +12,8 @@ import java.util.ArrayList;
  * @author James
  */
 public class MarkData {
-    private static final double aFactor = 1.0;
-    private static final double bFactor = 1.0;
+    private static final double aFactor = 0.05;
+    private static final double bFactor = 0.5;
     private static final double cFactor = 1.0;
     private static final double weightFactor = 0.15;
     private static final double defaultMark = 0.7;
