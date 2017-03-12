@@ -28,23 +28,28 @@ public class MarkData {
         return orderedStudents;
     }
     
-    
+    private double[][] generateStudentToCourseStatPair(ArrayList<Student> students, ArrayList<Course> courses, int coursePosition, String course) {
+        int hultSize = courses.get(coursePosition).getEnrolledStudentIDs().length;
+        double[][] value = new double[hultSize][2];
+        
+        return value;
+    }
     
     private double findStudentCourseSD(StudentCourse student, double mean) {
-        double weightedMark = 0;
+        double mark = 0;
         int i;
         for (i=0; i<student.numberOfMarks(); i++) {
-            weightedMark += Math.pow(student.getMarkAt(i)*student.getWeightAt(i) - mean, 2); // (x-mu)^2
+            mark += Math.pow(student.getMarkAt(i) - mean, 2); // (x-mu)^2
         }
-        return weightedMark/(i-1); // i-1 subject to change depending on Bessel's correction (suspect I should use it since incomplete data results in a statistic?)
+        return Math.sqrt(mark/(i-1)); // i-1 subject to change depending on Bessel's correction (suspect I should use it since incomplete data results in a statistic?)
     }
     
     private double findStudentCourseMean(StudentCourse student) {
-        double weightedMark = 0;
+        double mark = 0;
         int i;
         for (i=0; i<student.numberOfMarks(); i++) {
-            weightedMark += student.getMarkAt(i)*student.getWeightAt(i);
+            mark += student.getMarkAt(i);
         }
-        return weightedMark/i;
+        return mark/i;
     }
 }

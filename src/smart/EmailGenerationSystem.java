@@ -26,7 +26,7 @@ public class EmailGenerationSystem {
         ArrayList orderedStudents = MarkData.analysis(args[0]);
     }
     
-    private void sendEmail(String recieverAddress, StudentInNeed student) {
+    private void sendEmail(StudentInNeed student) { 
         //unpack the Student in need and send the email with the students information
     }
 }
