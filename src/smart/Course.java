@@ -20,6 +20,11 @@ public class Course {
         this.enrolledStudentIDsList = new ArrayList<>();
     }
     
+    public Course(String courseID, ArrayList<String> enrolled) {
+        this.courseID = courseID;
+        this.enrolledStudentIDsList = enrolled;
+    }
+    
     public String getCourseID() {
         return this.courseID;
     }
