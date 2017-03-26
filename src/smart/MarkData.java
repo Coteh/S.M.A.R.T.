@@ -97,8 +97,8 @@ public class MarkData {
      */
     public static ArrayList analysis(){
         ArrayList<StudentInNeed> unorderedStudents = new ArrayList();
-        ArrayList<Course> courses = MarkDataInput.getCourses();
-        ArrayList<Student> students = MarkDataInput.getStudents();
+        ArrayList<Course> courses = allCoursesB; // MarkDataInput.getCourses();
+        ArrayList<Student> students = allStudentsB; // MarkDataInput.getStudents();
         double pa, pb=0.0, pc=0.0;
         for (int i=0; i<students.size(); i++) {
             double ClassAveragePartialPA = 0.0;
@@ -240,16 +240,25 @@ public class MarkData {
      */
     private static double findStudentCourseWeightedSD(StudentCourse student, double weightedMean) {
         int NumOfNonZeroWeights = 0;
-        double mark = 0;
-        double weightSum = 0;
+        double mark = 0.0;
+        double weightSum = 0.0;
+        double markDif;
         for (int i=0; i<student.numberOfMarks(); i++) {
             if (student.getWeightAt(i) != 0)
                 NumOfNonZeroWeights++;
             weightSum += student.getWeightAt(i);
-            mark += student.getWeightAt(i) * Math.pow(student.getMarkAt(i) - weightedMean, 2); // w*(x-mu)^2
+            markDif = student.getMarkAt(i) - weightedMean;
+            mark += student.getWeightAt(i) * markDif * markDif; // w*(x-mu)^2
         }
-        return Math.sqrt((mark/((NumOfNonZeroWeights-1)*weightSum))/(double)NumOfNonZeroWeights);
-    }
+        if (NumOfNonZeroWeights < 1) {
+            return 0.0;
+        }
+        if (NumOfNonZeroWeights == 1) {
+            return Math.sqrt(mark/weightSum);
+        }
+        return Math.sqrt((mark/(((double)(NumOfNonZeroWeights-1))*weightSum))/(double)NumOfNonZeroWeights);
+    } // 0.006454972243679025
+      // 0.006454972243679025
     
     /** find student course mean
      * returns the mean of the marks in the course
@@ -257,8 +266,8 @@ public class MarkData {
      * @return mean
      */
     private static double findStudentCourseWeightedMean(StudentCourse student) {
-        double mark = 0;
-        double weightSum = 0;
+        double mark = 0.0;
+        double weightSum = 0.0;
         for (int i=0; i<student.numberOfMarks(); i++) {
             mark += student.getMarkAt(i)*student.getWeightAt(i);
             weightSum += student.getWeightAt(i);
