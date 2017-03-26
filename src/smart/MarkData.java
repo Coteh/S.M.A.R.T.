@@ -239,26 +239,25 @@ public class MarkData {
      * @return standard deviation
      */
     private static double findStudentCourseWeightedSD(StudentCourse student, double weightedMean) {
-        int NumOfNonZeroWeights = 0;
+        int numOfNonZeroWeights = 0;
         double mark = 0.0;
         double weightSum = 0.0;
         double markDif;
         for (int i=0; i<student.numberOfMarks(); i++) {
             if (student.getWeightAt(i) != 0)
-                NumOfNonZeroWeights++;
+                numOfNonZeroWeights++;
             weightSum += student.getWeightAt(i);
             markDif = student.getMarkAt(i) - weightedMean;
             mark += student.getWeightAt(i) * markDif * markDif; // w*(x-mu)^2
         }
-        if (NumOfNonZeroWeights < 1) {
+        if (numOfNonZeroWeights < 1) {
             return 0.0;
         }
-        if (NumOfNonZeroWeights == 1) {
+        if (numOfNonZeroWeights == 1) { // if weightSum is zero then numofNonZeroWeights is zero
             return Math.sqrt(mark/weightSum);
         }
-        return Math.sqrt((mark/(((double)(NumOfNonZeroWeights-1))*weightSum))/(double)NumOfNonZeroWeights);
-    } // 0.006454972243679025
-      // 0.006454972243679025
+        return Math.sqrt((mark/(((double)(numOfNonZeroWeights-1))*weightSum))/(double)numOfNonZeroWeights);
+    }      // 0.006454972243679025
     
     /** find student course mean
      * returns the mean of the marks in the course
