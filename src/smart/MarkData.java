@@ -209,6 +209,9 @@ public class MarkData {
             if (subAverageWeight >= weightFactor)
                 break;
         }
+        if (subAverageWeight <= 0) {
+            return 0.0;
+        }
         return subAverageWeightedMark/subAverageWeight; // normalize output
     }
     
@@ -270,6 +273,9 @@ public class MarkData {
         for (int i=0; i<student.numberOfMarks(); i++) {
             mark += student.getMarkAt(i)*student.getWeightAt(i);
             weightSum += student.getWeightAt(i);
+        }
+        if (weightSum <= 0.0) {
+            return 0.0;
         }
         return mark/weightSum;
     }
