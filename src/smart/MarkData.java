@@ -18,87 +18,16 @@ public class MarkData {
     private static final double weightFactor = 0.15;
     private static final double defaultMark = 0.7;
     
-    
-    private static ArrayList<Course> allCoursesB;
-    private static ArrayList<Student> allStudentsB;
-    public static void main(String[] args) {
-        ArrayList<StudentCourse> enroled = new ArrayList<>();
-        String courseA = "Course A";
-        String courseB = "Course B";
-        StudentCourse studentC = new StudentCourse(courseA);
-        studentC.addMark(0.0, 0.02);
-        studentC.addMark(0.7, 0.3);
-        studentC.addMark(0.8, 0.2);
-        studentC.addMark(0.3, 0.1);
-        studentC.addMark(0.01, 0.02);
-        enroled.add(studentC);
-        studentC = new StudentCourse(courseB);
-        studentC.addMark(0.6, 0.1);
-        studentC.addMark(0.7, 0.3);
-        studentC.addMark(0.8, 0.2);
-        studentC.addMark(0.4, 0.1);
-        studentC.addMark(0.85, 0.2);
-        enroled.add(studentC);
-        Student stu;
-        try {
-            stu = new Student("Stu", "0091125", "Stu@somewhere.com", 0.90, enroled);
-        } catch (Exception e) {
-            System.err.println("stu error");
-            return;
-        }
-        ArrayList<Student> allStudents = new ArrayList<>();
-        allStudents.add(stu);
-        
-        enroled = new ArrayList<>();
-        studentC = new StudentCourse(courseB);
-        studentC.addMark(0.7, 0.1);
-        studentC.addMark(0.7, 0.3);
-        studentC.addMark(0.7, 0.2);
-        studentC.addMark(0.75, 0.1);
-        studentC.addMark(0.65, 0.2);
-        enroled.add(studentC);
-        try {
-            stu = new Student("Joe", "0087777", "Joe@somewhere.com", 0.60, enroled);
-        } catch (Exception e) {
-            System.err.println("stu error");
-            return;
-        }
-        allStudents.add(stu);
-        
-        ArrayList<String> enNames = new ArrayList<>();
-        enNames.add("Stu");
-        ArrayList<Course> allCourses = new ArrayList<>();
-        allCourses.add(new Course(courseA, enNames));
-        enNames.add("Joe");
-        allCourses.add(new Course(courseB, enNames));
-        double[][] stuData = generateCourseWeightedStatPairs(allStudents, allCourses, courseB, 1);
-        
-        allCoursesB = allCourses;
-        allStudentsB = allStudents;
-        ArrayList<StudentInNeed> sin = analysis();
-        
-        double mean = findStudentCourseMean(studentC);
-        double weightedMean = findStudentCourseWeightedMean(studentC);
-        System.out.println("Mean: " + mean + ", Weighted mean: " + weightedMean);
-        System.out.println("SD: " + findStudentCourseSD(studentC, mean) + ", SWD: " + findStudentCourseWeightedSD(studentC, mean));
-        System.out.println("m: " + mSolve(studentC));
-        
-        System.out.println(stuData[0][0] + ", " + stuData[0][1] + ", " + stuData[0][2]);
-        System.out.println(stuData[1][0] + ", " + stuData[1][1] + ", " + stuData[1][2]);
-        
-        System.out.println(sin.get(0).getName() + " = " + sin.get(0).getPriority() + ", " + sin.get(1).getName() + " = " + sin.get(1).getPriority());
-    }
-    
     /** analysis function
      * takes in a spreadsheet file (which is passed off to MarkDataInput)
      * returns ordered ArrayList of Students in need (first element is highest priority)
      * @param 
      * @return ordered ArrayList of Students in need
      */
-    public static ArrayList analysis(){
+    public static ArrayList analysis(MarkDataInput dataInput){
         ArrayList<StudentInNeed> unorderedStudents = new ArrayList();
-        ArrayList<Course> courses = allCoursesB; // MarkDataInput.getCourses();
-        ArrayList<Student> students = allStudentsB; // MarkDataInput.getStudents();
+        ArrayList<Course> courses = dataInput.getCourses();
+        ArrayList<Student> students = dataInput.getStudents();
         double pa, pb=0.0, pc=0.0;
         for (int i=0; i<students.size(); i++) {
             double ClassAveragePartialPA = 0.0;
@@ -336,5 +265,23 @@ public class MarkData {
             mark += student.getMarkAt(i);
         }
         return mark/i;
+    }
+    
+    public static void main(String[] args) {
+        TestMarkDataInput md = new TestMarkDataInput();
+        double[][] stuData = generateCourseWeightedStatPairs(md.getStudents(), md.getCourses(), md.courseBStr, 1);
+        
+        ArrayList<StudentInNeed> sin = MarkData.analysis(md);
+        
+        double mean = findStudentCourseMean(md.studentC);
+        double weightedMean = findStudentCourseWeightedMean(md.studentC);
+        System.out.println("Mean: " + mean + ", Weighted mean: " + weightedMean);
+        System.out.println("SD: " + findStudentCourseSD(md.studentC, mean) + ", SWD: " + findStudentCourseWeightedSD(md.studentC, mean));
+        System.out.println("m: " + mSolve(md.studentC));
+        
+        System.out.println(stuData[0][0] + ", " + stuData[0][1] + ", " + stuData[0][2]);
+        System.out.println(stuData[1][0] + ", " + stuData[1][1] + ", " + stuData[1][2]);
+        
+        System.out.println(sin.get(0).getName() + " = " + sin.get(0).getPriority() + ", " + sin.get(1).getName() + " = " + sin.get(1).getPriority());
     }
 }

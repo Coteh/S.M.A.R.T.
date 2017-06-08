@@ -18,12 +18,19 @@ import java.util.logging.Logger;
  * @author James
  */
 public class SmartMain {
-    /** main
-     *  method for running system
-     * @param args  {data file address for students who have been already contacted}
+    /** SmartMain
+     *  main method for running system
      */
     public static void main(String[] args) {
-        ArrayList<StudentInNeed> orderedStudents = MarkData.analysis();
+        MarkDataInput md;
+        
+        if (args.length >= 1 && args[0].equals("test")) {
+            md = new TestMarkDataInput();
+        } else {
+            md = new DBMarkDataInput();
+        }
+        
+        ArrayList<StudentInNeed> orderedStudents = MarkData.analysis(md);
         
         HTMLOutput html = new HTMLOutput(orderedStudents);
         

@@ -8,7 +8,12 @@ package smart;
 import java.util.ArrayList;
 
 /**
- *
+ * EmailGenerationSystem
+ * We did not have time to complete this for the hackathon,
+ * but the plan with this was that it would basically take the emails
+ * of all the students in need and send a pregenerated email of some kind
+ * that would contain the student's information and notify them where to find
+ * the mental health services located on university campus.
  * @author James
  */
 public class EmailGenerationSystem {

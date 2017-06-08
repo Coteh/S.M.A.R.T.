@@ -20,6 +20,8 @@ public class HTMLOutput {
     public HTMLOutput(ArrayList<StudentInNeed> studentsInNeed) {
         String html;
         
+        int limit = (studentsInNeed.size() < 5) ? studentsInNeed.size() : 5;
+        
         PrintWriter writer;
         try {
             writer = new PrintWriter("results.html", "UTF-8");
@@ -31,7 +33,7 @@ public class HTMLOutput {
             writer.println("    </head>\n");
             writer.println("    <body>");
             writer.println("    <h3>Students that are most in need (Sample Results)</h3>");
-            for (int i = 0; i < 5; i++) {
+            for (int i = 0; i < limit; i++) {
                 StudentInNeed student = studentsInNeed.get(i);
                 writer.println("<li>" + student.getName() + " (" + student.getID() + ") (" + student.getEmail() + ") " + student.getCourseAverage().toString());
             }
