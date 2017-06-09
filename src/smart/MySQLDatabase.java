@@ -33,7 +33,15 @@ public class MySQLDatabase {
         try{
             dataBaseConnection = DriverManager.getConnection(location, userName, password);
         } catch(SQLException e){
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
+        }
+    }
+    
+    public void closeConnection() {
+        try {
+            dataBaseConnection.close();
+        } catch (SQLException e) {
+            System.err.println(e.getMessage());
         }
     }
     
@@ -44,7 +52,7 @@ public class MySQLDatabase {
             Statement newStatement = dataBaseConnection.createStatement();
             newStatement.executeUpdate(sqlStatement);
         }catch(SQLException e){
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
     
@@ -60,7 +68,7 @@ public class MySQLDatabase {
             preparedStmnt.setInt(5,markTime);
             preparedStmnt.execute();
         }catch(SQLException e){
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
     
@@ -77,7 +85,7 @@ public class MySQLDatabase {
             preparedStmnt.setString(4,nameOfStudent);
             preparedStmnt.execute();
         }catch(SQLException e){
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
     
@@ -87,7 +95,7 @@ public class MySQLDatabase {
             Statement newStatement = dataBaseConnection.createStatement();
             newStatement.executeUpdate(sqlStatement);
         }catch(SQLException e){
-            System.out.println(e.getMessage());
+            System.err.println(e.getMessage());
         }
     }
      public ResultSet retrieveFromTable( String select, String from, String where ){
@@ -97,7 +105,7 @@ public class MySQLDatabase {
             Statement newStatement = dataBaseConnection.createStatement();
             currentResults = newStatement.executeQuery(sqlStatement); 
          }catch(SQLException e){
-             System.out.println(e.getMessage());
+             System.err.println(e.getMessage());
          }
          return currentResults;
      }
@@ -108,7 +116,7 @@ public class MySQLDatabase {
             Statement newStatement = dataBaseConnection.createStatement();
             currentResults = newStatement.executeQuery(sqlStatement); 
          }catch(SQLException e){
-             System.out.println(e.getMessage());
+             System.err.println(e.getMessage());
          }
          return currentResults;
      }

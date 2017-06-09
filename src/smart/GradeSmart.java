@@ -49,8 +49,7 @@ public class GradeSmart {
         //newBatch.printIds();
         //newBatch.printInCourse();
         newBatch.moveToSql(currentDatabase);
-        
-       
+        currentDatabase.closeConnection();
     }
     
     public void generateStudentNumber(){

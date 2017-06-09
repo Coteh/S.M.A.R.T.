@@ -136,6 +136,8 @@ public class MarkDataInput {
 //                    System.out.println("-> " + studentIDs[k]);
 //                }
 //            }
+
+              instance.currentDatabase.closeConnection();
         }
         return instance;
     }

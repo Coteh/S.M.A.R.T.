@@ -97,8 +97,8 @@ public class MarkData {
      */
     public static ArrayList analysis(){
         ArrayList<StudentInNeed> unorderedStudents = new ArrayList();
-        ArrayList<Course> courses = allCoursesB; // MarkDataInput.getCourses();
-        ArrayList<Student> students = allStudentsB; // MarkDataInput.getStudents();
+        ArrayList<Course> courses = MarkDataInput.getCourses();
+        ArrayList<Student> students = MarkDataInput.getStudents();
         double pa, pb=0.0, pc=0.0;
         for (int i=0; i<students.size(); i++) {
             double ClassAveragePartialPA = 0.0;
