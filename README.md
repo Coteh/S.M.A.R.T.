@@ -3,3 +3,5 @@
 [![View on Devpost](https://img.shields.io/badge/view%20on-devpost-green.svg)](https://devpost.com/software/s-m-a-r-t-swyknb)
 
 Guelph Hacks for Mental Health submission. (March 2017)
+
+Minor adjustments/fixes to the project and additional Readme information coming soon.
